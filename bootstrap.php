@@ -1,7 +1,6 @@
 <?php
 /* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Make sure all of the paths here are correct for your setup
  */
 
 /**
@@ -9,8 +8,11 @@
  */
 
 // TODO: check include path
-ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.dirname(__FILE__).'/../../../../../opt/lampp/lib/php/PHPUnit'.PATH_SEPARATOR.dirname(__FILE__).'/../src'.PATH_SEPARATOR.dirname(__FILE__).'/../src'.PATH_SEPARATOR.dirname(__FILE__).'/../src/wolf');
-//ini_set("include_path", "../src/wolf/app/models".PATH_SEPARATOR."../../../../src/wolf/app/models".PATH_SEPARATOR.ini_get("include_path"));
+ini_set('include_path', ini_get('include_path')
+                        .PATH_SEPARATOR.dirname(__FILE__).'/../../../../../opt/lampp/lib/php/PHPUnit'
+                        .PATH_SEPARATOR.dirname(__FILE__).'/../src'
+                        .PATH_SEPARATOR.dirname(__FILE__).'/../src'
+                        .PATH_SEPARATOR.dirname(__FILE__).'/../src/wolf');
 require_once 'PHPUnit/Framework.php';
 require_once 'Framework.php';
 

@@ -181,8 +181,6 @@ class PluginTest extends PHPUnit_Framework_TestCase
 
         $test = $stub->isEnabled('test');
 
-        echo 'TEST-'.$test;
-
         // Remove the following lines when you implement this test.
         /*
         $this->markTestIncomplete(

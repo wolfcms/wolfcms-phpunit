@@ -596,11 +596,62 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         
         // Dirty the record by changing a variable and check its state
         $obj->someValueAccessor(1);
+        $this->assertEquals(1, $obj->someValueAccessor());
         $this->assertTrue($obj->isDirty());
         
         // Save the dirty record, thereby making it clean again
         $obj->save();
         $this->assertFalse($obj->isDirty());
+    }
+    
+    public function testDirtyFields() {
+        $expected = array('name' => 'Test name');
+        $actual = new Object();
+        
+        // Make sure the method exists
+        $this->assertTrue(method_exists($actual, 'dirtyFields'));
+        
+        $this->assertFalse($actual->isDirty());
+        $actual->setFromData(array('id' => 1, 'name' => 'Test name'));
+        $this->assertFalse($actual->isDirty());
+        
+        $actual->setName('New test name');
+        $this->assertTrue($actual->isDirty());
+        
+        $actualFields = $actual->dirtyFields();
+        $this->assertType('array', $actual);
+        $this->assertEquals($expected, $actual);
+    }
+    
+    public function testDirtyValueOf() {
+        $expected = 'New test name';
+        $actual = new Object();
+
+        // Make sure the method exists
+        $this->assertTrue(method_exists($actual, 'dirtyValueOf'));
+        
+        $this->assertFalse($actual->isDirty());
+        $actual->setFromData(array('id' => 1, 'name' => 'Test name'));
+        $this->assertFalse($actual->isDirty());
+        
+        $actual->setName('New test name');
+        $this->assertTrue($actual->isDirty());
+        
+        $this->assertEquals($expected, $actual->dirtyValueOf('name'));
+    }
+    
+    public function testMandatoryFields() {
+        $className = 'Record';
+        
+        // Testing for presence of...
+        $attributeName = '__CONN__';
+        $this->assertClassHasStaticAttribute($attributeName, $className);
+        
+        $attributeName = '__QUERIES__';
+        $this->assertClassHasStaticAttribute($attributeName, $className);
+
+        $attributeName = 'dirtyFields';
+        $this->assertClassHasAttribute($attributeName, $className);
     }
 
 }

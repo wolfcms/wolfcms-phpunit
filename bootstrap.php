@@ -11,9 +11,10 @@
 ini_set('include_path', ini_get('include_path')
                         .PATH_SEPARATOR.dirname(__FILE__).'/../../../../../opt/lampp/lib/php/PHPUnit'
                         .PATH_SEPARATOR.dirname(__FILE__).'/../src'
-                        .PATH_SEPARATOR.dirname(__FILE__).'/../src/wolf');
+                        .PATH_SEPARATOR.dirname(__FILE__).'/../src/wolf'
+                        .PATH_SEPARATOR.dirname(__FILE__).'/../src/wolf/app/models');
 
-require_once 'PHPUnit/Framework.php';
+//require_once 'PHPUnit/Framework.php';
 
 $_SERVER['HTTP_HOST'] = 'localhost';
 

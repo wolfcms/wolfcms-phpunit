@@ -1,6 +1,6 @@
 <?php
 
-require_once 'PHPUnit/Framework.php';
+require_once 'Node.php';
 
 /**
  * Test class for Node.
@@ -253,12 +253,13 @@ class NodeTest extends PHPUnit_Framework_TestCase {
      */
     public function testToSlug() {
         // Remove the following lines when you implement this test.
-        $this->assertEquals("a-a-a-a-a-o-o", Node::toSlug("å Å ä Ä ä ö Ö"));
         $this->assertEquals("this-is-a-slug-test", Node::toSlug("This is a slug test"));
         $this->assertEquals("this-is-a-slug-test", Node::toSlug("This IS  a slug-test"));
         $this->assertEquals("this-is-a-2nd-slug-test-part-two", Node::toSlug("This IS  a 2nd slug---test part-two"));
         $this->assertEquals("this-is-another-slug_test", Node::toSlug("This is another, slug_test"));
-
+        $this->assertEquals("konnichiha", Node::toSlug('こんにちは'));
+        $this->assertEquals("a-a-a-a-a-o-o", Node::toSlug("å Å ä Ä ä ö Ö"));
+        
         $line = 1;
 
         foreach($this->kanaromaji as $test){

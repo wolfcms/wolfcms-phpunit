@@ -39,7 +39,7 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         Record::getConnection()->exec("set names 'utf8'");
 
         $this->conn = $conn;
-        $this->conn->exec("DROP TABLE object_table");
+        //$this->conn->exec("DROP TABLE object_table");
     }
 
 
@@ -588,16 +588,19 @@ class RecordTest extends PHPUnit_Framework_TestCase {
     public function testIsDirty() {
         $obj = new Object();
         
+        // Make sure the method exists
+        $this->assertTrue(method_exists($obj, 'isDirty'));
+        
         // Make sure default state is clean
-        $this->assertTrue($obj->isDirty() === false);
+        $this->assertFalse($obj->isDirty());
         
         // Dirty the record by changing a variable and check its state
         $obj->someValueAccessor(1);
-        $this->assertTrue($obj->isDirty() === true);
+        $this->assertTrue($obj->isDirty());
         
         // Save the dirty record, thereby making it clean again
         $obj->save();
-        $this->assertTrue($obj->isDirty() === false);
+        $this->assertFalse($obj->isDirty());
     }
 
 }

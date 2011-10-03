@@ -584,6 +584,21 @@ class RecordTest extends PHPUnit_Framework_TestCase {
                 'This test has not been implemented yet.'
         );
     }
+    
+    public function testIsDirty() {
+        $obj = new Object();
+        
+        // Make sure default state is clean
+        $this->assertTrue($obj->isDirty() === false);
+        
+        // Dirty the record by changing a variable and check its state
+        $obj->someValueAccessor(1);
+        $this->assertTrue($obj->isDirty() === true);
+        
+        // Save the dirty record, thereby making it clean again
+        $obj->save();
+        $this->assertTrue($obj->isDirty() === false);
+    }
 
 }
 

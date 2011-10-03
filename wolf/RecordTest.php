@@ -650,7 +650,7 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         $attributeName = '__QUERIES__';
         $this->assertClassHasStaticAttribute($attributeName, $className);
 
-        $attributeName = 'dirtyFields';
+        $attributeName = '__DIRTY__';
         $this->assertClassHasAttribute($attributeName, $className);
     }
 

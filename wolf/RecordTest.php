@@ -1,6 +1,16 @@
 <?php
 class Object extends Record {
     const TABLE_NAME = 'object_table';
+    
+    private $id;
+    private $name;
+    
+    public function someValueAccessor($value = null) {
+        if ($value !== null) {
+            $this->name = $value;
+        }
+        else return $this->name;
+    }
 }
 
 class ObjectNoTableName extends Record { /* .. */ }
@@ -69,10 +79,10 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $actual);
 
         $actual = new Object(array());
-        $this->assertNotEquals($expected, $actual);
+        $this->assertEquals($expected, $actual);
 
         $actual = new Object(false);
-        $this->assertNotEquals($expected, $actual);
+        $this->assertEquals($expected, $actual);
     }
 
 
@@ -320,6 +330,21 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         $actual = new Object();
         $actual->setFromData(array('id' => 1, 'name' => 'Test name', 'data' => 'data'));
         $this->assertNotEquals($expected, $actual);
+    }
+    
+    
+    public function test__Get() {
+        $expected = new Object();
+        $actual = new Object();
+        $this->assertEquals($expected, $actual);
+
+        $expected->id = 1;
+        $expected->name = 'Test name';
+        $actual->id = 1;
+        $actual->name = 'Test name';
+        $this->assertEquals($expected, $actual);
+        
+        $this->assertEquals('Test name', $actual->name);
     }
 
 
@@ -585,12 +610,16 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         );
     }
     
+    
+    /**
+     * 
+     */
     public function testIsDirty() {
         $obj = new Object();
         
         // Make sure the method exists
         $this->assertTrue(method_exists($obj, 'isDirty'));
-        
+
         // Make sure default state is clean
         $this->assertFalse($obj->isDirty());
         
@@ -602,20 +631,57 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         // Save the dirty record, thereby making it clean again
         $obj->save();
         $this->assertFalse($obj->isDirty());
+        
+        // Set through direct access
+        /*
+        $obj->name = 'Another value';
+        $this->assertEquals('Another value', $obj->someValueAccessor());
+        $this->assertTrue($obj->isDirty());
+         * 
+         */
+        
+        // Save the dirty record, thereby making it clean again
+        /*
+        $obj->save();
+        $this->assertFalse($obj->isDirty());
+         * 
+         */
+        
+        // Set through setFromData()
+        /*
+        $obj->setFromData(array('name' => 'Some name value'));
+        $this->assertEquals('Some name value', $obj->someValueAccessor());
+        $this->assertTrue($obj->isDirty());
+         * 
+         */
+        
+        // Save the dirty record, thereby making it clean again
+        /*
+        $obj->save();
+        $this->assertFalse($obj->isDirty());
+         * 
+         */
     }
     
     public function testDirtyFields() {
         $expected = array('name' => 'Test name');
         $actual = new Object();
+        $actual->someValueAccessor('Test name');
+        $actual->save();
         
         // Make sure the method exists
         $this->assertTrue(method_exists($actual, 'dirtyFields'));
         
         $this->assertFalse($actual->isDirty());
+        /*
         $actual->setFromData(array('id' => 1, 'name' => 'Test name'));
+        $this->assertEquals(1, $actual->id);
         $this->assertFalse($actual->isDirty());
+         * 
+         */
         
-        $actual->setName('New test name');
+        $actual->someValueAccessor('New test name');
+        $this->assertEquals('New test name', $actual->someValueAccessor());
         $this->assertTrue($actual->isDirty());
         
         $actualFields = $actual->dirtyFields();

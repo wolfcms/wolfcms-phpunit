@@ -1,0 +1,7 @@
+<phpunit>
+  <testsuites>
+    <testsuite name="Basics">
+      <directory>wolf</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>

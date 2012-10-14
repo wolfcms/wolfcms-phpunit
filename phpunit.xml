@@ -1,7 +1,9 @@
 <phpunit>
   <testsuites>
     <testsuite name="Basics">
-      <directory>wolf</directory>
+      <file>wolf/FlashTest.php</file>
+      <file>wolf/InflectorTest.php</file>
+      <file>wolf/InflectorTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

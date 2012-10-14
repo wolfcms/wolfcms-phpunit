@@ -17,7 +17,7 @@ ini_set('include_path', ini_get('include_path')
 
 //$_SERVER['HTTP_HOST'] = 'localhost';
 
-//require_once 'Framework.php';
+require_once 'Framework.php';
 
 $dbtest = getenv('DB');
 

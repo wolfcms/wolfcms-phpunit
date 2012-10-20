@@ -2,7 +2,7 @@
 <phpunit backupGlobals="true"
          backupStaticAttributes="false"
          bootstrap="./bootstrap.php"
-         colors="true"
+         colors="false"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true">
@@ -12,7 +12,4 @@
             <file>./tests/NodeTest.php</file>
         </testsuite>
     </testsuites>
-    <logging>
-        <log type="coverage-html" target="./coverage" charset="UTF-8" yui="true"/>
-    </logging>
 </phpunit>

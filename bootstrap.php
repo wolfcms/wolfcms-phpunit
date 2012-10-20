@@ -29,7 +29,7 @@ if ($dbtest == 'mysql') {
     define('DB_USER', 'root');
 }
 
-if ($dbtest == 'pgsql') {
+if ($dbtest == 'postgres') {
     define('DB_DSN', 'pgsql:dbname=wolfcms_test;host=127.0.0.1;port=5432');
     define('DB_USER', 'postgres');
 }

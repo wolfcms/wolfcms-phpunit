@@ -27,14 +27,16 @@ $dbtest = getenv('DB');
 if ($dbtest == 'mysql') {
     define('DB_DSN', 'mysql:dbname=wolfcms_test;host=127.0.0.1;port=3306');
     define('DB_USER', 'root');
+    define('DB_PASS', '');
 }
 
 if ($dbtest == 'postgres') {
     define('DB_DSN', 'pgsql:dbname=wolfcms_test;host=127.0.0.1;port=5432');
     define('DB_USER', 'postgres');
+    define('DB_PASS', '');
 }
 
-define('DB_PASS', '');
+
 define('TABLE_PREFIX', '');
 
 

@@ -43,6 +43,12 @@ class RoleTest extends PHPUnit_Framework_TestCase {
         $this->PDO = $PDO;
 
         // Setup test table(s)
+        if ($driver === 'pgsql') {
+            $this->markTestIncomplete('This test is not yet complete!');
+        }
+        
+        if ($driver === 'mysql') {
+            
         $this->PDO->exec("CREATE TABLE role (
                 id int(11) NOT NULL auto_increment,
                 name varchar(25) NOT NULL,
@@ -68,6 +74,8 @@ class RoleTest extends PHPUnit_Framework_TestCase {
                 role_id int(11) NOT NULL,
                 UNIQUE KEY user_id (user_id,role_id)
             ) ENGINE=MyISAM DEFAULT CHARSET=utf8");
+        
+        }
 
         // Insert test data
         $this->PDO->exec("INSERT INTO role (id, name) VALUES (1, 'administrator')");

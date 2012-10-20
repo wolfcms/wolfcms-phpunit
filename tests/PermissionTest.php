@@ -36,12 +36,19 @@ class PermissionTest extends PHPUnit_Framework_TestCase {
         $this->PDO = $PDO;
 
         // Setup test table(s)
+        if ($driver === 'pgsql') {
+            $this->markTestIncomplete('This test is not yet complete!');
+        }
+        
+        if ($driver === 'mysql') {
+            
         $PDO->exec("CREATE TABLE ".TABLE_PREFIX."permission (
                 id int(11) NOT NULL auto_increment,
                 name varchar(25) NOT NULL,
                 PRIMARY KEY  (id),
                 UNIQUE KEY name (name)
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8");
+        }
 
         // Insert test data
         $this->PDO->exec("INSERT INTO permission (id, name) VALUES (1, 'administrator')");

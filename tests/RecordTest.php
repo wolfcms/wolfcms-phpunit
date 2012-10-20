@@ -33,7 +33,7 @@ class RecordTest extends PHPUnit_Framework_TestCase {
      * This method is called before a test is executed.
      */
     protected function setUp() {
-        $this->object = new Record;
+        $this->object = new Record();
 
         // Attempt to create DB connection
         try {
@@ -42,14 +42,17 @@ class RecordTest extends PHPUnit_Framework_TestCase {
             die('DB Connection failed: '.$error->getMessage());
         }
 
-        $conn->getAttribute(PDO::ATTR_DRIVER_NAME);
-        $conn->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+        $this->driver = $conn->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if ($this->driver === 'mysql') {
+            $conn->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+        }
 
         Record::connection($conn);
         Record::getConnection()->exec("set names 'utf8'");
 
         $this->conn = $conn;
         //$this->conn->exec("DROP TABLE object_table");
+        $this->object->connection($conn);
     }
 
 
@@ -208,11 +211,18 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $actual);
 
         // Create table
-        $this->conn->exec("CREATE TABLE object_table (
+        if ($this->driver === 'mysql') {
+            $this->conn->exec("CREATE TABLE object_table (
                 id int(11) unsigned NOT NULL auto_increment,
                 name text,
                 PRIMARY KEY  (id)
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8");
+        }
+        
+        if ($this->driver === 'pgsql') {
+            $this->markTestIncomplete('This test is not yet complete!');
+        }
+        
         
         // Test without records
         $actual = $this->object->query('SELECT * FROM object_table');
@@ -268,12 +278,25 @@ class RecordTest extends PHPUnit_Framework_TestCase {
      */
     public function testEscape() {
         $input = "Ain't this lovely?";
-        $expected = "'Ain\'t this lovely?'";
+        if ($this->driver === 'pgsql') {
+            $expected = "'Ain''t this lovely?'";
+        }
+        if ($this->driver === 'mysql') {
+            $expected = "'Ain\'t this lovely?'";
+        }
+        
         $actual = $this->object->escape($input);
         $this->assertEquals($expected, $actual);
 
         $input = 'Aint "this" lovely?';
-        $expected = '\'Aint \"this\" lovely?\'';
+        
+        if ($this->driver === 'pgsql') {
+            $expected = '\'Aint "this" lovely?\'';
+        }
+        if ($this->driver === 'mysql') {
+            $expected = '\'Aint \"this\" lovely?\'';
+        }
+        
         $actual = $this->object->escape($input);
         $this->assertEquals($expected, $actual);
     }
@@ -289,12 +312,19 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $actual);
 
         // Create table
+        if ($this->driver === 'mysql') {
         $this->conn->exec("CREATE TABLE object_table (
                 id int(11) unsigned NOT NULL auto_increment,
                 name text,
                 PRIMARY KEY  (id)
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8");
+        }
 
+        if ($this->driver === 'pgsql') {
+            $this->markTestIncomplete('This test is not yet complete!');
+        }
+
+        
         $expected = 0;
         $actual = $this->object->lastInsertId();
         $this->assertNotNull($actual);
@@ -361,11 +391,17 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $actual);
 
         // Create table
+        if ($this->driver === 'mysql') {
         $this->conn->exec("CREATE TABLE object_table (
                 id int(11) unsigned NOT NULL auto_increment,
                 name text,
                 PRIMARY KEY  (id)
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8");
+        }
+        
+        if ($this->driver === 'pgsql') {
+            $this->markTestIncomplete('This test is not yet complete!');
+        }
 
         // Test without records
         $actual = $this->object->query('SELECT * FROM object_table');
@@ -404,11 +440,17 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $actual);
 
         // Create table
+        if ($this->driver === 'mysql') {
         $this->conn->exec("CREATE TABLE object_table (
                 id int(11) unsigned NOT NULL auto_increment,
                 name text,
                 PRIMARY KEY  (id)
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8");
+        }
+        
+        if ($this->driver === 'pgsql') {
+            $this->markTestIncomplete('This test is not yet complete!');
+        }
 
         // Test without records
         $actual = $this->object->query('SELECT * FROM object_table');
@@ -469,12 +511,18 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $actual);
 
         // Create table
-        $this->conn->exec("CREATE TABLE object_table (
+        if ($this->driver === 'mysql') {
+            $this->conn->exec("CREATE TABLE object_table (
                 id int(11) unsigned NOT NULL auto_increment,
                 name text,
                 PRIMARY KEY  (id)
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8");
+        }
 
+        if ($this->driver === 'pgsql') {
+            $this->markTestIncomplete('This test is not yet complete!');
+        }
+        
         // Test without records
         $actual = $this->object->query('SELECT * FROM object_table');
         $this->assertInstanceOf('PDOStatement', $actual);

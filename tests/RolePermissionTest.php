@@ -31,7 +31,7 @@ class RolePermissionTest extends PHPUnit_Framework_TestCase {
         
         $this->assertInstanceOf('PDO', $PDO);
 
-        $PDO->getAttribute(PDO::ATTR_DRIVER_NAME);
+        $driver = $PDO->getAttribute(PDO::ATTR_DRIVER_NAME);
         $PDO->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 
         Record::connection($PDO);
@@ -39,6 +39,12 @@ class RolePermissionTest extends PHPUnit_Framework_TestCase {
         $this->PDO = $PDO;
 
         // Setup test table(s)
+        if ($driver === 'pgsql') {
+            $this->markTestIncomplete('This test is not yet complete!');
+        }
+        
+        if ($driver === 'mysql') {
+
         $this->PDO->exec("CREATE TABLE role (
                 id int(11) NOT NULL auto_increment,
                 name varchar(25) NOT NULL,
@@ -58,6 +64,7 @@ class RolePermissionTest extends PHPUnit_Framework_TestCase {
                 PRIMARY KEY  (id),
                 UNIQUE KEY name (name)
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8");
+        }
 
         // Insert test data
         $this->PDO->exec("INSERT INTO role (id, name) VALUES (1, 'administrator')");

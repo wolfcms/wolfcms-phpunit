@@ -69,7 +69,7 @@ class PermissionTest extends PHPUnit_Framework_TestCase {
         $expected = 1;
 
         $actual = $this->object->id();
-        $this->assertType('integer', $actual);
+        $this->assertInternalType('integer', $actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -83,7 +83,7 @@ class PermissionTest extends PHPUnit_Framework_TestCase {
         $this->object->name = $expected;
 
         $actual = $this->object->name();
-        $this->assertType('string', $actual);
+        $this->assertInternalType('string', $actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -97,7 +97,7 @@ class PermissionTest extends PHPUnit_Framework_TestCase {
         $this->object->name = $expected;
 
         $actual = $this->object->__toString();
-        $this->assertType('string', $actual);
+        $this->assertInternalType('string', $actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -112,11 +112,11 @@ class PermissionTest extends PHPUnit_Framework_TestCase {
                     );
 
         $actual = $this->object->findAllFrom('Permission');
-        $this->assertType('array', $actual);
+        $this->assertInternalType('array', $actual);
         $this->assertEquals($expected, $actual);
 
         $actual = $this->object->getPermissions();
-        $this->assertType('array', $actual);
+        $this->assertInternalType('array', $actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -137,27 +137,27 @@ class PermissionTest extends PHPUnit_Framework_TestCase {
 
         // Normal
         $actual = $this->object->findById(1);
-        $this->assertType('Permission', $actual);
+        $this->assertInstanceOf('Permission', $actual);
         $this->assertEquals($expected, $actual);
 
         // Normal but string
         $actual = $this->object->findById('1');
-        $this->assertType('Permission', $actual);
+        $this->assertInstanceOf('Permission', $actual);
         $this->assertEquals($expected, $actual);
 
         // Non existent perm
         $actual = $this->object->findById(2300);
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
 
         // Garbage string
         $actual = $this->object->findById('just garbadge');
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
 
         // No params
         $actual = $this->object->findById();
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
     }
 
@@ -170,32 +170,32 @@ class PermissionTest extends PHPUnit_Framework_TestCase {
 
         // Normal
         $actual = $this->object->findByName('administrator');
-        $this->assertType('Permission', $actual);
+        $this->assertInstanceOf('Permission', $actual);
         $this->assertEquals($expected, $actual);
 
         // Empty string
         $actual = $this->object->findByName('');
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
 
         // Non existent perm
         $actual = $this->object->findByName('nonexistant');
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
 
         // Another type
         $actual = $this->object->findByName(2300);
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
 
         // Null param
         $actual = $this->object->findByName(null);
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
 
         // No params
         $actual = $this->object->findByName();
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
     }
 
@@ -207,7 +207,7 @@ class PermissionTest extends PHPUnit_Framework_TestCase {
         $expected = array('id', 'name');
         $actual = $this->object->getColumns();
 
-        $this->assertType('array', $actual);
+        $this->assertInternalType('array', $actual);
         $this->assertTrue(count($actual) == count($expected));
         $this->assertEquals($expected, $actual);
     }

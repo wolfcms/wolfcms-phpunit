@@ -15,10 +15,7 @@ ini_set('include_path', ini_get('include_path')
                         .PATH_SEPARATOR.dirname(__FILE__).'/..'
                         .PATH_SEPARATOR.dirname(__FILE__).'/../wolf'
                         .PATH_SEPARATOR.dirname(__FILE__).'/../wolf/app/models');
-/*
-//require_once 'PHPUnit/Framework.php';
 
-$_SERVER['HTTP_HOST'] = 'localhost';*/
 define('BASE_URL', '');
 
 require_once 'Framework.php';

@@ -39,7 +39,7 @@ class CronTest extends PHPUnit_Framework_TestCase {
         $this->assertNull($this->object->getLastRunTime());
         $this->assertTrue($this->object->beforeUpdate());
         $this->assertNotNull($this->object->getLastRunTime());
-        $this->assertType('int', $this->object->getLastRunTime());
+        $this->assertInternalType('int', $this->object->getLastRunTime());
     }
 
 

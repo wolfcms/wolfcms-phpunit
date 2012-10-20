@@ -6,8 +6,20 @@
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true">
+    <php>
+        <env name="DB" value="mysql"/>
+    </php>
     <testsuites>
         <testsuite name="AllTests">
+            <file>./tests/RecordTest.php</file>
+            <file>./tests/AutoLoaderTest.php</file>
+            <!--file>./tests/AuthUserTest.php</file-->
+            <file>./tests/CronTest.php</file>
+            <file>./tests/PermissionTest.php</file>
+            <file>./tests/RolePermissionTest.php</file>
+            <file>./tests/RoleTest.php</file>
+            <file>./tests/UserTest.php</file>
+            <file>./tests/FlashTest.php</file>
             <file>./tests/InflectorTest.php</file>
             <file>./tests/NodeTest.php</file>
         </testsuite>

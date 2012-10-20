@@ -33,7 +33,7 @@ class RoleTest extends PHPUnit_Framework_TestCase {
             die('DB Connection failed: '.$error->getMessage());
         }
         
-        $this->assertType('PDO', $PDO);
+        $this->assertInstanceOf('PDO', $PDO);
 
         $driver = $PDO->getAttribute(PDO::ATTR_DRIVER_NAME);
         $PDO->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
@@ -115,14 +115,14 @@ class RoleTest extends PHPUnit_Framework_TestCase {
 
         // Setup
         $this->object = Role::findById(1);
-        $this->assertType('Role', $this->object);
+        $this->assertInstanceOf('Role', $this->object);
         $this->assertNotNull($this->object);
 
         $expected = array('administrator' => new Permission(array('id' => '1', 'name' => 'administrator')));
 
         // Found perms for role
         $actual = $this->object->permissions();
-        $this->assertType('array', $actual);
+        $this->assertInternalType('array', $actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -137,27 +137,27 @@ class RoleTest extends PHPUnit_Framework_TestCase {
         
         // Setup
         $this->object = Role::findById(1);
-        $this->assertType('Role', $this->object);
+        $this->assertInstanceOf('Role', $this->object);
         $this->assertNotNull($this->object);
 
         $actual = $this->object->hasPermission('administrator');
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertTrue($actual);
 
         $actual = $this->object->hasPermission('administrator, developer');
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertTrue($actual);
 
         $actual = $this->object->hasPermission('administrator,developer');
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertTrue($actual);
 
         $actual = $this->object->hasPermission('');
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
 
         $actual = $this->object->hasPermission();
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
     }
 
@@ -174,23 +174,23 @@ class RoleTest extends PHPUnit_Framework_TestCase {
 
         // Normal use
         $actual = Role::findById(2);
-        $this->assertType('Role', $actual);
+        $this->assertInstanceOf('Role', $actual);
         $this->assertEquals($expected, $actual);
 
         // Param as string
         $actual = Role::findById('2');
-        $this->assertType('Role', $actual);
+        $this->assertInstanceOf('Role', $actual);
         $this->assertEquals($expected, $actual);
 
         // Invalid string
         $actual = Role::findById('abc');
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertNotEquals($expected, $actual);
         $this->assertFalse($actual);
 
         // No param
         $actual = Role::findById();
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertNotEquals($expected, $actual);
         $this->assertFalse($actual);
     }
@@ -208,32 +208,32 @@ class RoleTest extends PHPUnit_Framework_TestCase {
 
         // Normal use
         $actual = Role::findByName('developer');
-        $this->assertType('Role', $actual);
+        $this->assertInstanceOf('Role', $actual);
         $this->assertEquals($expected, $actual);
 
         // Case test
         $actual = Role::findByName('DevelOper');
-        $this->assertType('Role', $actual);
+        $this->assertInstanceOf('Role', $actual);
         $this->assertEquals($expected, $actual);
 
         // Empty string
         $actual = Role::findByName('');
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
 
         // Invalid string
         $actual = Role::findByName('doesNotExist');
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
 
         // No string
         $actual = Role::findByName(null);
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
 
         // No param
         $actual = Role::findByName();
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
     }
 
@@ -252,27 +252,27 @@ class RoleTest extends PHPUnit_Framework_TestCase {
         );
         
         $actual = Role::findByUserId(1);
-        $this->assertType('array', $actual);
+        $this->assertInternalType('array', $actual);
         $this->assertEquals($expected, $actual);
 
         $actual = Role::findByUserId('1');
-        $this->assertType('array', $actual);
+        $this->assertInternalType('array', $actual);
         $this->assertEquals($expected, $actual);
 
         $actual = Role::findByUserId(2300);
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
 
         $actual = Role::findByUserId('notValid');
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
 
         $actual = Role::findByUserId();
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
 
         $actual = Role::findByUserId(null);
-        $this->assertType('boolean', $actual);
+        $this->assertInternalType('boolean', $actual);
         $this->assertFalse($actual);
     }
 
@@ -287,7 +287,7 @@ class RoleTest extends PHPUnit_Framework_TestCase {
         $expected = array('id', 'name');
         $actual = $this->object->getColumns();
 
-        $this->assertType('array', $actual);
+        $this->assertInternalType('array', $actual);
         $this->assertEquals($expected, $actual);
     }
 

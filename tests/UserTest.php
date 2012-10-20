@@ -1,6 +1,6 @@
 <?php
 
-require_once 'AuthUser.php';
+//require_once 'AuthUser.php';
 require_once 'User.php';
 
 /**
@@ -32,7 +32,9 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $this->object = null;
     }
 
-
+    /**
+     * 
+     */
     public function testObjectCreation() {
         $this->object->id = 1;
         $this->object->name = 'test user';
@@ -64,7 +66,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue(method_exists($this->object, 'roles'));
         
         $actual = $this->object->roles();
-        $this->assertType('array', $actual);
+        $this->assertInternalType('array', $actual);
         $this->assertNotNull($actual);
     }
 
@@ -84,6 +86,10 @@ class UserTest extends PHPUnit_Framework_TestCase {
      * @todo Implement testBeforeInsert().
      */
     public function testBeforeInsert() {
+        $this->markTestIncomplete(
+                'This test has not been implemented yet.'
+        );
+        
         // Make sure the method exists
         $this->assertTrue(method_exists($this->object, 'beforeInsert'));
         

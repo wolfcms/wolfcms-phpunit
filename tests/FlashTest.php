@@ -41,7 +41,7 @@ class FlashTest extends PHPUnit_Framework_TestCase {
         Flash::setNow('TestVar', $expected);
         $actual = Flash::get('TestVar');
         $this->assertNotNull($actual);
-        $this->assertType('string', $actual);
+        $this->assertInternalType('string', $actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -76,13 +76,13 @@ class FlashTest extends PHPUnit_Framework_TestCase {
         Flash::setNow('TestVar', $expected);
         $actual = Flash::get('TestVar');
         $this->assertNotNull($actual);
-        $this->assertType('string', $actual);
+        $this->assertInternalType('string', $actual);
         $this->assertEquals($expected, $actual);
 
         Flash::clear();
         $actual = Flash::get('TestVar');
         $this->assertNotNull($actual);
-        $this->assertType('string', $actual);
+        $this->assertInternalType('string', $actual);
         $this->assertEquals($expected, $actual);
     }
 

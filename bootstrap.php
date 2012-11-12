@@ -36,6 +36,12 @@ if ($dbtest == 'postgres') {
     define('DB_PASS', '');
 }
 
+if ($dbtest == 'sqlite') {
+    define('DB_DSN', 'sqlite::memory:');
+    define('DB_USER', 'sqlite');
+    define('DB_PASS', '');
+}
+
 
 define('TABLE_PREFIX', '');
 

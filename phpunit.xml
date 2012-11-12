@@ -7,7 +7,7 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true">
     <php>
-        <env name="DB" value="postgres"/>
+        <env name="DB" value="mysql"/>
     </php>
     <testsuites>
         <testsuite name="AllTests">

@@ -17,6 +17,7 @@ class RoleTest extends PHPUnit_Framework_TestCase {
      */
     protected $object;
     protected $PDO;
+    protected $driver;
 
 
     /**
@@ -35,7 +36,7 @@ class RoleTest extends PHPUnit_Framework_TestCase {
         
         $this->assertInstanceOf('PDO', $PDO);
 
-        $driver = $PDO->getAttribute(PDO::ATTR_DRIVER_NAME);
+        $this->driver = $PDO->getAttribute(PDO::ATTR_DRIVER_NAME);
         $PDO->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 
         Record::connection($PDO);
@@ -43,11 +44,11 @@ class RoleTest extends PHPUnit_Framework_TestCase {
         $this->PDO = $PDO;
 
         // Setup test table(s)
-        if ($driver === 'pgsql') {
+        if ($this->driver === 'pgsql') {
             $this->markTestIncomplete('This test is not yet complete!');
         }
         
-        if ($driver === 'sqlite') {
+        if ($this->driver === 'sqlite') {
             $this->PDO->exec("CREATE TABLE permission ( 
                 id INTEGER NOT NULL PRIMARY KEY, 
                 name varchar(25) NOT NULL 
@@ -73,7 +74,7 @@ class RoleTest extends PHPUnit_Framework_TestCase {
             $this->PDO->exec("CREATE UNIQUE INDEX user_role_user_id ON user_role (user_id,role_id)");
         }
         
-        if ($driver === 'mysql') {
+        if ($this->driver === 'mysql') {
             
         $this->PDO->exec("CREATE TABLE role (
                 id int(11) NOT NULL auto_increment,
@@ -246,9 +247,17 @@ class RoleTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $actual);
 
         // Case test
-        $actual = Role::findByName('DevelOper');
-        $this->assertInstanceOf('Role', $actual);
-        $this->assertEquals($expected, $actual);
+        $actual = Role::findByName('Developer');
+        
+        // Note - sqlite uses case sensitive utf-8
+        if ($this->driver === 'sqlite') {
+            $this->assertFalse($actual);
+        }
+        // Note - mysql does not have case sensitive utf-8 (yet)
+        else {
+            $this->assertInstanceOf('Role', $actual);
+            $this->assertEquals($expected, $actual);
+        }
 
         // Empty string
         $actual = Role::findByName('');

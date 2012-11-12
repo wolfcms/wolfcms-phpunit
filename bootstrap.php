@@ -38,8 +38,8 @@ if ($dbtest == 'postgres') {
 
 if ($dbtest == 'sqlite') {
     define('DB_DSN', 'sqlite::memory:');
-    define('DB_USER', 'sqlite');
-    define('DB_PASS', '');
+    define('DB_USER', null);
+    define('DB_PASS', null);
 }
 
 

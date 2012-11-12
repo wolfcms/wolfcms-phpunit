@@ -41,7 +41,7 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         } catch (PDOException $error) {
             die('DB Connection failed: '.$error->getMessage());
         }
-
+        
         $this->driver = $conn->getAttribute(PDO::ATTR_DRIVER_NAME);
         if ($this->driver === 'mysql') {
             $conn->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
@@ -51,7 +51,6 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         Record::getConnection()->exec("set names 'utf8'");
 
         $this->conn = $conn;
-        //$this->conn->exec("DROP TABLE object_table");
         $this->object->connection($conn);
     }
 
@@ -120,6 +119,7 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         $actual = Record::getConnection();
 
         $this->assertEquals($expected, $actual);
+        $this->assertInstanceOf('PDO', $actual);
     }
 
 
@@ -219,10 +219,16 @@ class RecordTest extends PHPUnit_Framework_TestCase {
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8");
         }
         
+        if ($this->driver === 'sqlite') {
+            $this->conn->exec("CREATE TABLE object_table (
+                id INTEGER NOT NULL PRIMARY KEY,
+                name varchar(100) default NULL
+            )");
+        }
+        
         if ($this->driver === 'pgsql') {
             $this->markTestIncomplete('This test is not yet complete!');
         }
-        
         
         // Test without records
         $actual = $this->object->query('SELECT * FROM object_table');
@@ -237,7 +243,12 @@ class RecordTest extends PHPUnit_Framework_TestCase {
 
         // Test with one record
         $actual = $this->object->query('SELECT * FROM object_table WHERE id=?');
-        $this->assertFalse($actual);
+        if ($this->driver !== 'sqlite') {
+            $this->assertFalse($actual);
+        }
+        else {
+            $this->assertInstanceOf('PDOStatement', $actual);
+        }
         $actual = $this->object->query('SELECT * FROM object_table WHERE id=?', array(1));
         $this->assertInternalType('array', $actual);
         $this->assertNotNull($actual);
@@ -278,6 +289,9 @@ class RecordTest extends PHPUnit_Framework_TestCase {
      */
     public function testEscape() {
         $input = "Ain't this lovely?";
+        if ($this->driver === 'sqlite') {
+            $expected = "'Ain''t this lovely?'";
+        }
         if ($this->driver === 'pgsql') {
             $expected = "'Ain''t this lovely?'";
         }
@@ -290,6 +304,9 @@ class RecordTest extends PHPUnit_Framework_TestCase {
 
         $input = 'Aint "this" lovely?';
         
+        if ($this->driver === 'sqlite') {
+            $expected = '\'Aint "this" lovely?\'';
+        }
         if ($this->driver === 'pgsql') {
             $expected = '\'Aint "this" lovely?\'';
         }
@@ -318,6 +335,13 @@ class RecordTest extends PHPUnit_Framework_TestCase {
                 name text,
                 PRIMARY KEY  (id)
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8");
+        }
+        
+        if ($this->driver === 'sqlite') {
+            $this->conn->exec("CREATE TABLE object_table (
+                id INTEGER NOT NULL PRIMARY KEY,
+                name varchar(100) default NULL
+            )");
         }
 
         if ($this->driver === 'pgsql') {
@@ -399,6 +423,13 @@ class RecordTest extends PHPUnit_Framework_TestCase {
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8");
         }
         
+        if ($this->driver === 'sqlite') {
+            $this->conn->exec("CREATE TABLE object_table (
+                id INTEGER NOT NULL PRIMARY KEY,
+                name varchar(100) default NULL
+            )");
+        }
+        
         if ($this->driver === 'pgsql') {
             $this->markTestIncomplete('This test is not yet complete!');
         }
@@ -446,6 +477,13 @@ class RecordTest extends PHPUnit_Framework_TestCase {
                 name text,
                 PRIMARY KEY  (id)
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8");
+        }
+        
+        if ($this->driver === 'sqlite') {
+            $this->conn->exec("CREATE TABLE object_table (
+                id INTEGER NOT NULL PRIMARY KEY,
+                name varchar(100) default NULL
+            )");
         }
         
         if ($this->driver === 'pgsql') {
@@ -517,6 +555,13 @@ class RecordTest extends PHPUnit_Framework_TestCase {
                 name text,
                 PRIMARY KEY  (id)
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8");
+        }
+        
+        if ($this->driver === 'sqlite') {
+            $this->conn->exec("CREATE TABLE object_table (
+                id INTEGER NOT NULL PRIMARY KEY,
+                name varchar(100) default NULL
+            )");
         }
 
         if ($this->driver === 'pgsql') {

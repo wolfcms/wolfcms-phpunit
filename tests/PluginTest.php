@@ -178,18 +178,15 @@ class PluginTest extends PHPUnit_Framework_TestCase
     public function testIsEnabled() {
         $stub = $this->getMock('Plugin');
         $stub->expects($this->any())
-        ->method('isEnabled')
-        ->will($this->returnValue('foo'));
+             ->method('isEnabled')
+             ->will($this->returnValue('foo'));
 
         $test = $stub->isEnabled('test');
 
         // Remove the following lines when you implement this test.
-        /*
         $this->markTestIncomplete(
           'This test has not been implemented yet.'
         );
-         * 
-         */
     }
 
     /**

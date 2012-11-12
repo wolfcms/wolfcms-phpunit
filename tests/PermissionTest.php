@@ -29,7 +29,9 @@ class PermissionTest extends PHPUnit_Framework_TestCase {
         }
 
         $driver = $PDO->getAttribute(PDO::ATTR_DRIVER_NAME);
-        $PDO->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+        if ($driver === 'mysql') {
+            $PDO->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+        }
 
         Record::connection($PDO);
         Record::getConnection()->exec("set names 'utf8'");
@@ -38,6 +40,14 @@ class PermissionTest extends PHPUnit_Framework_TestCase {
         // Setup test table(s)
         if ($driver === 'pgsql') {
             $this->markTestIncomplete('This test is not yet complete!');
+        }
+        
+        if ($driver === 'sqlite') {
+            $PDO->exec("CREATE TABLE permission ( 
+                id INTEGER NOT NULL PRIMARY KEY, 
+                name varchar(25) NOT NULL 
+            )");
+            $PDO->exec("CREATE UNIQUE INDEX permission_name ON permission (name)");
         }
         
         if ($driver === 'mysql') {

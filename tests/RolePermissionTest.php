@@ -14,7 +14,6 @@ class RolePermissionTest extends PHPUnit_Framework_TestCase {
      */
     protected $object;
 
-
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
@@ -26,9 +25,9 @@ class RolePermissionTest extends PHPUnit_Framework_TestCase {
         try {
             $PDO = new PDO(DB_DSN, DB_USER, DB_PASS);
         } catch (PDOException $error) {
-            die('DB Connection failed: '.$error->getMessage());
+            die('DB Connection failed: ' . $error->getMessage());
         }
-        
+
         $this->assertInstanceOf('PDO', $PDO);
 
         $driver = $PDO->getAttribute(PDO::ATTR_DRIVER_NAME);
@@ -42,23 +41,43 @@ class RolePermissionTest extends PHPUnit_Framework_TestCase {
         if ($driver === 'pgsql') {
             $this->markTestIncomplete('This test is not yet complete!');
         }
-        
+
+        if ($driver === 'sqlite') {
+            $this->PDO->exec("CREATE TABLE permission ( 
+                id INTEGER NOT NULL PRIMARY KEY, 
+                name varchar(25) NOT NULL 
+            )");
+            $this->PDO->exec("CREATE UNIQUE INDEX permission_name ON permission (name)");
+
+            $this->PDO->exec("CREATE TABLE role (
+                id INTEGER NOT NULL PRIMARY KEY,
+                name varchar(25) NOT NULL
+            )");
+            $this->PDO->exec("CREATE UNIQUE INDEX role_name ON role (name)");
+            
+            $this->PDO->exec("CREATE TABLE role_permission (
+                role_id int(11) NOT NULL ,
+                permission_id int(11) NOT NULL
+            )");
+            $this->PDO->exec("CREATE UNIQUE INDEX role_permission_role_id ON role_permission (role_id,permission_id)");
+        }
+
         if ($driver === 'mysql') {
 
-        $this->PDO->exec("CREATE TABLE role (
+            $this->PDO->exec("CREATE TABLE role (
                 id int(11) NOT NULL auto_increment,
                 name varchar(25) NOT NULL,
                 PRIMARY KEY  (id),
                 UNIQUE KEY name (name)
             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8");
 
-        $this->PDO->exec("CREATE TABLE role_permission (
+            $this->PDO->exec("CREATE TABLE role_permission (
                 role_id int(11) NOT NULL,
                 permission_id int(11) NOT NULL,
                 UNIQUE KEY user_id (role_id,permission_id)
             ) ENGINE=MyISAM DEFAULT CHARSET=utf8");
 
-        $this->PDO->exec("CREATE TABLE permission (
+            $this->PDO->exec("CREATE TABLE permission (
                 id int(11) NOT NULL auto_increment,
                 name varchar(25) NOT NULL,
                 PRIMARY KEY  (id),
@@ -76,7 +95,6 @@ class RolePermissionTest extends PHPUnit_Framework_TestCase {
         $this->PDO->exec("INSERT INTO permission (id, name) VALUES (3, 'editor')");
     }
 
-
     /**
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
@@ -88,7 +106,6 @@ class RolePermissionTest extends PHPUnit_Framework_TestCase {
         $this->PDO->exec('DROP TABLE permission');
     }
 
-
     /**
      * @todo Implement testSavePermissionsFor().
      */
@@ -96,14 +113,14 @@ class RolePermissionTest extends PHPUnit_Framework_TestCase {
         $this->markTestIncomplete(
                 'This test has not been implemented yet.'
         );
-        
+
         // Make sure the method exists
         $this->assertTrue(method_exists('RolePermission', 'savePermissionsFor'));
-        
+
         $expected = array(new Permission(array('id' => 1, 'name' => 'administrator')),
-                          new Permission(array('id' => 2, 'name' => 'developer')),
-                          new Permission(array('id' => 3, 'name' => 'editor')),
-                    );
+            new Permission(array('id' => 2, 'name' => 'developer')),
+            new Permission(array('id' => 3, 'name' => 'editor')),
+        );
 
         // Normal use, perms
         $actual = $this->object->savePermissionsFor(1, $expected);
@@ -126,14 +143,13 @@ class RolePermissionTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($actual);
     }
 
-
     /**
      * @todo Implement testFindPermissionsFor().
      */
     public function testFindPermissionsFor() {
         // Make sure the method exists
         $this->assertTrue(method_exists('RolePermission', 'findPermissionsFor'));
-        
+
         $expected = array(new Permission(array('id' => 1, 'name' => 'administrator')));
 
         // Normal use

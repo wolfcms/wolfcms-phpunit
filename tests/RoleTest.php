@@ -47,6 +47,32 @@ class RoleTest extends PHPUnit_Framework_TestCase {
             $this->markTestIncomplete('This test is not yet complete!');
         }
         
+        if ($driver === 'sqlite') {
+            $this->PDO->exec("CREATE TABLE permission ( 
+                id INTEGER NOT NULL PRIMARY KEY, 
+                name varchar(25) NOT NULL 
+            )");
+            $this->PDO->exec("CREATE UNIQUE INDEX permission_name ON permission (name)");
+
+            $this->PDO->exec("CREATE TABLE role (
+                id INTEGER NOT NULL PRIMARY KEY,
+                name varchar(25) NOT NULL
+            )");
+            $this->PDO->exec("CREATE UNIQUE INDEX role_name ON role (name)");
+            
+            $this->PDO->exec("CREATE TABLE role_permission (
+                role_id int(11) NOT NULL ,
+                permission_id int(11) NOT NULL
+            )");
+            $this->PDO->exec("CREATE UNIQUE INDEX role_permission_role_id ON role_permission (role_id,permission_id)");
+            
+            $this->PDO->exec("CREATE TABLE user_role (
+                user_id int(11) NOT NULL ,
+                role_id int(11) NOT NULL
+            )");
+            $this->PDO->exec("CREATE UNIQUE INDEX user_role_user_id ON user_role (user_id,role_id)");
+        }
+        
         if ($driver === 'mysql') {
             
         $this->PDO->exec("CREATE TABLE role (

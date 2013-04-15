@@ -763,7 +763,18 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         $expected->name = 'Object # 1';
         $actual = Record::findByIdFrom('Object', 1);
         $this->assertEquals($expected, $actual);
-        
+
+        // Test with two records
+        $obj = new Object();
+        $obj->name = 'Object # 2';
+        $obj->save();
+
+        $expected = new Object();
+        $expected->id = 2;
+        $expected->name = 'Object # 2';
+        $actual = Record::findByIdFrom('Object', 2);
+        $this->assertEquals($expected, $actual);
+
     }
 
 

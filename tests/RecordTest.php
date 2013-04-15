@@ -732,10 +732,15 @@ class RecordTest extends PHPUnit_Framework_TestCase {
      * @todo Implement testFindByIdFrom().
      */
     public function testFindByIdFrom() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+        $obj = new Object();
+        $obj->name = 'an object';
+        $obj->save();
+
+        $expected = new Object();
+        $expected->id = 1;
+        $expected->name = 'an object';
+        $actual = Object::findById(1);
+        $this->assertEquals($expected, $actual);
     }
 
 

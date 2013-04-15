@@ -739,7 +739,7 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         $expected = new Object();
         $expected->id = 1;
         $expected->name = 'an object';
-        $actual = Object::findById(1);
+        $actual = Record::findByIdFrom('Object', 1);
         $this->assertEquals($expected, $actual);
     }
 

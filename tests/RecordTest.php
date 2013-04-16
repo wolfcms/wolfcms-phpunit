@@ -345,10 +345,13 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         }
 
         if ($this->driver === 'pgsql') {
-            $this->markTestIncomplete('This test is not yet complete!');
+            $this->conn->exec("CREATE TABLE object_table (
+                id serial,
+                name text,
+                PRIMARY KEY (id)
+            )");
         }
 
-        
         $expected = 0;
         $actual = $this->object->lastInsertId();
         $this->assertNotNull($actual);

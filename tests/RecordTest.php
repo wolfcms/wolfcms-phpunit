@@ -732,10 +732,53 @@ class RecordTest extends PHPUnit_Framework_TestCase {
      * @todo Implement testFindByIdFrom().
      */
     public function testFindByIdFrom() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
+
+        // Create table
+        if ($this->driver === 'mysql') {
+            $this->conn->exec("CREATE TABLE object_table (
+                id int(11) unsigned NOT NULL auto_increment,
+                name text,
+                PRIMARY KEY  (id)
+            ) ENGINE=MyISAM  DEFAULT CHARSET=utf8");
+        }
+        
+        if ($this->driver === 'sqlite') {
+            $this->conn->exec("CREATE TABLE object_table (
+                id INTEGER NOT NULL PRIMARY KEY,
+                name varchar(100) default NULL
+            )");
+        }
+        
+        if ($this->driver === 'pgsql') {
+            $this->conn->exec("CREATE TABLE object_table (
+                id serial,
+                name text,
+                PRIMARY KEY (id)
+            )");
+        }
+
+        // Test with one record
+        $obj = new Object();
+        $obj->name = 'Object # 1';
+        $obj->save();
+
+        $expected = new Object();
+        $expected->id = 1;
+        $expected->name = 'Object # 1';
+        $actual = Record::findByIdFrom('Object', 1);
+        $this->assertEquals($expected, $actual);
+
+        // Test with two records
+        $obj = new Object();
+        $obj->name = 'Object # 2';
+        $obj->save();
+
+        $expected = new Object();
+        $expected->id = 2;
+        $expected->name = 'Object # 2';
+        $actual = Record::findByIdFrom('Object', 2);
+        $this->assertEquals($expected, $actual);
+
     }
 
 

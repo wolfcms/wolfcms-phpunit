@@ -358,7 +358,7 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expected, $actual);
 
         // Test with one record
-        $this->conn->exec("INSERT INTO object_table (id, name) VALUES (1, 'A Test Record')");
+        $this->conn->exec("INSERT INTO object_table (name) VALUES ('A Test Record')");
         $expected = 1;
         $actual = $this->object->lastInsertId();
         $this->assertNotNull($actual);

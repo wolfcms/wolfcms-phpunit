@@ -21,4 +21,7 @@
             <file>./tests/NodeTest.php</file>
         </testsuite>
     </testsuites>
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
 </phpunit>

@@ -146,19 +146,13 @@ class AuthUserTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers AuthUser::getPermissions
-     * @todo Implement testGetPermissions().
      */
     public function testGetPermissions() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-        
         // Make sure the method exists
-        $this->assertTrue(method_exists($this->object, 'getPermissions'));
+        $this->assertTrue(method_exists('AuthUser', 'getPermissions'));
         
         $expected = array();
-        $actual = $this->object->getPermissions();
+        $actual = AuthUser::getPermissions();
 
         $this->assertInternalType('array', $actual);
         $this->assertEquals($expected, $actual);
@@ -169,13 +163,8 @@ class AuthUserTest extends PHPUnit_Framework_TestCase {
      * @todo Implement testHasPermission().
      */
     public function testHasPermission() {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-                'This test has not been implemented yet.'
-        );
-        
         // Make sure the method exists
-        $this->assertTrue(method_exists($this->object, 'hasPermission'));
+        $this->assertTrue(method_exists('AuthUser', 'hasPermission'));
         
         $actual = AuthUser::hasPermission('view_admin');
         $this->assertInternalType('boolean', $actual);

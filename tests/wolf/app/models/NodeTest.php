@@ -32,7 +32,7 @@ function simpleStaticDynTwoParamTest($name, $hello) {
  * Used by testRegisterMethod(), test__callStatic()
  */
 function simpleStaticDynArrayParamTest($params) {
-    return "$params[1], $params[2]!";
+    return "$params[0], $params[1]!";
 }
 
 /**

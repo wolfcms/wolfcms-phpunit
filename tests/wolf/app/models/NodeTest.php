@@ -8,7 +8,7 @@ require_once 'Node.php';
 
 /* One param dynamic test method (NON-STATIC).
  * 
- * Used by testRegisterMethod(), test__call()
+ * Used by test__call()
  */
 function simpleDynTest($caller, $name) {
     return "Hello, $name!";
@@ -22,7 +22,7 @@ function simpleDynTwoParamTest($caller, $name, $hello) {
     return "$hello, $name!";
 }
 
-/* One param as array dynamic test method.(NON-STATIC)
+/* One param as array dynamic test method (NON-STATIC)
  * 
  * Used by test__call()
  */
@@ -30,7 +30,7 @@ function simpleDynArrayParamTest($caller, $params) {
     return "$params[0], $params[1]!";
 }
 
-/* Variable number of params test method.(NON-STATIC)
+/* Variable number of params test method (NON-STATIC)
  * NOTE: First param will always be the calling object
  * 
  * Used by test__call()
@@ -48,7 +48,7 @@ function simpleDynVariableParamTest() {
     return $returnStr;
 }
 
-/* Simplistic dynamic test method
+/* Simplistic dynamic test method (NON-STATIC)
  * with calling object context
  * 
  * Used by test__call()
@@ -84,7 +84,7 @@ function simpleStaticDynTest($name) {
 }
 
 
-/* Simplistic dynamic test method.(STATIC)
+/* Simplistic dynamic test method (STATIC)
  * 
  * Used by test__callStatic()
  */
@@ -92,7 +92,7 @@ function simpleStaticDynTwoParamTest($name, $hello) {
     return "$hello, $name!";
 }
 
-/* Simplistic dynamic test method.
+/* Simplistic dynamic test method. (STATIC)
  * 
  * Used by test__callStatic()
  */
@@ -100,7 +100,7 @@ function simpleStaticDynArrayParamTest($params) {
     return "$params[0], $params[1]!";
 }
 
-/* Variable number of params test method.(NON-STATIC)
+/* Variable number of params test method (STATIC)
  * NOTE: First param will always be the calling object
  * 
  * Used by test__callStatic()

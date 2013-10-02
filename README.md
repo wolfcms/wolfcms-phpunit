@@ -15,5 +15,8 @@ workarounds for this, like `ANSICON` app but the easiest way to fix this:
 
 change `colors="true"` to `colors="false"` in `phpunit.xml`
 
+=======================
+
 http://www.wolfcms.org/
+
 http://www.phpunit.de/

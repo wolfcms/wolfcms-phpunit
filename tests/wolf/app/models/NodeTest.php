@@ -2,16 +2,53 @@
 
 require_once 'Node.php';
 
+/*
+ * NON-STATIC TEST CALLBACK FUNCTIONS
+ */
 
-/* Simplistic dynamic test method.
+/* One param dynamic test method (NON-STATIC).
  * 
- * Used by testRegisterMethod(), test__call()
+ * Used by test__call()
  */
 function simpleDynTest($caller, $name) {
     return "Hello, $name!";
 }
 
-/* Simplistic dynamic test method
+/* Two params dynamic test method.(NON-STATIC)
+ * 
+ * Used by test__call()
+ */
+function simpleDynTwoParamTest($caller, $name, $hello) {
+    return "$hello, $name!";
+}
+
+/* One param as array dynamic test method (NON-STATIC)
+ * 
+ * Used by test__call()
+ */
+function simpleDynArrayParamTest($caller, $params) {
+    return "$params[0], $params[1]!";
+}
+
+/* Variable number of params test method (NON-STATIC)
+ * NOTE: First param will always be the calling object
+ * 
+ * Used by test__call()
+ */
+function simpleDynVariableParamTest() {
+    $params = func_get_args();
+    // take the caller Object from params Array, it's first
+    $caller = $params[0];
+    // Let the object introduce itself
+    $returnStr = 'param0=' . get_class($caller) . ' instance;';
+    // Iterate the rest of params
+    for ($i=1; $i < count($params); $i++) {
+        $returnStr .= 'param'.$i.'='.$params[$i].';';
+    }
+    return $returnStr;
+}
+
+/* Simplistic dynamic test method (NON-STATIC)
  * with calling object context
  * 
  * Used by test__call()
@@ -33,32 +70,54 @@ function simpleDynContextExtendedTest($callerObject, $name) {
     return "$objClass $action $name";
 }
 
-/* Simplistic dynamic test method.
- * 
- * Used by testRegisterMethod(), test__call()
+
+/*
+ * STATIC TEST CALLBACK FUNCTIONS
  */
-function simpleStaticDynTest($caller, $name) {
+
+/* Simplistic dynamic test method (STATIC).
+ * 
+ * Used by test__call()
+ */
+function simpleStaticDynTest($name) {
     return "Ni hao, $name!";
 }
 
-/* Simplistic dynamic test method.
+
+/* Simplistic dynamic test method (STATIC)
  * 
- * Used by testRegisterMethod(), test__callStatic()
+ * Used by test__callStatic()
  */
-function simpleStaticDynTwoParamTest($caller, $name, $hello) {
+function simpleStaticDynTwoParamTest($name, $hello) {
     return "$hello, $name!";
 }
 
-/* Simplistic dynamic test method.
+/* Simplistic dynamic test method. (STATIC)
  * 
- * Used by testRegisterMethod(), test__callStatic()
+ * Used by test__callStatic()
  */
-function simpleStaticDynArrayParamTest($caller, $params) {
+function simpleStaticDynArrayParamTest($params) {
     return "$params[0], $params[1]!";
 }
 
+/* Variable number of params test method (STATIC)
+ * NOTE: First param will always be the calling object
+ * 
+ * Used by test__callStatic()
+ */
+function simpleStaticDynVariableParamTest() {
+    $params = func_get_args();
+    $returnStr = '';
+    // Iterate the params
+    for ($i=0; $i < count($params); $i++) {
+        $returnStr .= 'param'.$i.'='.$params[$i].';';
+    }
+    return $returnStr;
+}
+
 /*
- * Test class extending Node
+ * Simple class extending Node
+ * For testing purpose
  */
 class NodeExtended extends Node {
     
@@ -318,51 +377,81 @@ class NodeTest extends PHPUnit_Framework_TestCase {
      */
     protected function tearDown() {
         $this->object = null;
+        $this->objectExtended = null;
     }
     
     /**
      * @covers Node::__call
-     * @todo Implement test__call().
+     * 
+     * @todo test more cases
+     * 
+     * We don't expect any exceptions here
      */
     public function test__call() {
         
         $this->assertTrue(method_exists('Node', 'registerMethod'));        
         
         //--------
-        // dynamic test - ONE parameter
-        $registered = Node::registerMethod('someMethod', 'simpleDynTest');
+        // ONE parameter
+        $registered = Node::registerMethod('oneParamMethod', 'simpleDynTest');
         $this->assertTrue($registered);
         
-        $expected = 'Hello, Martijn!';
-        $actual = $this->object->someMethod('Martijn');        
-        $this->assertEquals($expected, $actual);
+            $expected = 'Hello, Martijn!';
+            $actual = $this->object->oneParamMethod('Martijn');        
+            $this->assertEquals($expected, $actual);
         
         //--------
-        // dynamic test - TWO parameters
-        $registered = Node::registerMethod('someNewMethod', 'simpleStaticDynTwoParamTest');
+        // TWO parameters
+        $registered = Node::registerMethod('twoParamMethod', 'simpleDynTwoParamTest');
         $this->assertTrue($registered);
         
-        $expected = 'Konichiwa, Martijn!';
-        $actual = $this->object->someNewMethod('Martijn', 'Konichiwa');
-        $this->assertEquals($expected, $actual);
+            $expected = 'Konichiwa, Martijn!';
+            $actual = $this->object->twoParamMethod('Martijn', 'Konichiwa');
+            $this->assertEquals($expected, $actual);
 
         //--------
-        // dynamic test - ONE parameter as Array
-        $registered = Node::registerMethod('someNewArrayMethod', 'simpleStaticDynArrayParamTest');
+        // ONE parameter as Array
+        $registered = Node::registerMethod('oneParamArrayMethod', 'simpleDynArrayParamTest');
         $this->assertTrue($registered);
         
-        $expected = 'Hi, guy!';
-        $actual = $this->object->someNewArrayMethod(array('Hi', 'guy'));
-        $this->assertEquals($expected, $actual);
+            $expected = 'Hi, guy!';
+            $actual = $this->object->oneParamArrayMethod(array('Hi', 'guy'));
+            $this->assertEquals($expected, $actual);
         
+        //--------
+        // VARIABLE number of parameters
+        // currently only integers and strings tested
+        $registered = Node::registerMethod('variableParamsMethod', 'simpleDynVariableParamTest');
+        $this->assertTrue($registered);
+        
+            // strings 
+            $expected = 'param0=Node instance;param1=test;param2=THIS;param3=Method;';
+            $actual = $this->object->variableParamsMethod('test','THIS','Method');
+            $this->assertEquals($expected, $actual);
+
+            // integers
+            $expected = 'param0=Node instance;param1=128;param2=256;param3=384;param4=512;param5=1000;';
+            $actual = $this->object->variableParamsMethod(128,256,384,512,1000);
+            $this->assertEquals($expected, $actual);
+
+            // no user-passed params
+            $expected = 'param0=Node instance;';
+            $actual = $this->object->variableParamsMethod();
+            $this->assertEquals($expected, $actual);
+
+            // mixed params on NodeExtended instance
+            $expected = 'param0=NodeExtended instance;param1=10;param2=wolves;';
+            $actual = $this->objectExtended->variableParamsMethod(10,'wolves');
+            $this->assertEquals($expected, $actual);
+
         //--------
         // dynamic test - ONE parameter with object context
         $registered = Node::registerMethod('greet', 'simpleDynContextTest');
         $this->assertTrue($registered);
         
-        $expected = 'Node is greeting PHPUnit';
-        $actual = $this->object->greet('PHPUnit');
-        $this->assertEquals($expected, $actual);
+            $expected = 'Node is greeting PHPUnit';
+            $actual = $this->object->greet('PHPUnit');
+            $this->assertEquals($expected, $actual);
         
         //--------
         // dynamic test - ONE parameter with object context
@@ -370,71 +459,92 @@ class NodeTest extends PHPUnit_Framework_TestCase {
         $registered = Node::registerMethod('takeAction', 'simpleDynContextExtendedTest');
         $this->assertTrue($registered);
         
-        // default action
-        $expected = 'NodeExtended says Hello!';
-        $actual = $this->objectExtended->takeAction('Hello!');
-        $this->assertEquals($expected, $actual);
-        
-        // change action
-        $this->objectExtended->setAction('tests');
-        $expected = 'NodeExtended tests Actions!';
-        $actual = $this->objectExtended->takeAction('Actions!');
-        $this->assertEquals($expected, $actual);
+            // default action
+            $expected = 'NodeExtended says Hello!';
+            $actual = $this->objectExtended->takeAction('Hello!');
+            $this->assertEquals($expected, $actual);
+
+            // change action
+            $this->objectExtended->setAction('tests');
+            $expected = 'NodeExtended tests Actions!';
+            $actual = $this->objectExtended->takeAction('Actions!');
+            $this->assertEquals($expected, $actual);
+
     }
 
     /**
      * @covers Node::__callStatic
-     * @todo Implement test__callStatic().
      * 
-     * expectedException BadMethodCallException
+     * @todo test more cases
+     * 
+     * We don't expect any exceptions here
      */
     public function test__callStatic() {
         
         $this->assertTrue(method_exists('Node', 'registerMethod'));
         
         //--------
-        // simple test
-        $result = Node::registerMethod('someStatMethod', 'simpleStaticDynTest', true);
+        // ONE parameter
+        $result = Node::registerMethod('oneParamStatMethod', 'simpleStaticDynTest', true);
         $this->assertTrue($result);
         
-        $expected = 'Ni hao, Martijn!';
-        $actual = Node::someStatMethod('Martijn');
-        $this->assertEquals($expected, $actual);
+            $expected = 'Ni hao, Martijn!';
+            $actual = Node::oneParamStatMethod('Martijn');
+            $this->assertEquals($expected, $actual);
         
         //--------
-        // test for single Array parameter
-        $result = Node::registerMethod('someNewArrayStatMethod', 'simpleStaticDynArrayParamTest', true);
+        // TWO parameters
+        $result = Node::registerMethod('twoParamStatMethod', 'simpleStaticDynTwoParamTest', true);
         $this->assertTrue($result);
         
-        $expected = 'Hi, guy!';
-        $actual = Node::someNewArrayStatMethod(array('Hi', 'guy'));
-        $this->assertEquals($expected, $actual);
+            $expected = 'Konichiwa, Martijn!';
+            $actual = Node::twoParamStatMethod('Martijn', 'Konichiwa');
+            $this->assertEquals($expected, $actual);      
         
         //--------
-        // test for TWO parameters
-        $result = Node::registerMethod('someNewStatMethod', 'simpleStaticDynTwoParamTest', true);
-        $this->assertTrue($result);
+        // ONE parameter as Array
+        $registered = Node::registerMethod('someNewStatArrayMethod', 'simpleStaticDynArrayParamTest',true);
+        $this->assertTrue($registered);
         
-        $expected = 'Konichiwa, Martijn!';
-        $actual = Node::someNewStatMethod('Martijn', 'Konichiwa');
-        $this->assertEquals($expected, $actual);      
+            $expected = 'Hi, guy!';
+            $actual = Node::someNewStatArrayMethod(array('Hi', 'guy'));
+            $this->assertEquals($expected, $actual);        
         
+        //--------
+        // VARIABLE number of parameters
+        // currently only integers and strings tested
+        $registered = Node::registerMethod('variableParamsStaticMethod', 'simpleStaticDynVariableParamTest',true);
+        $this->assertTrue($registered);        
+        
+            // strings 
+            $expected = 'param0=test;param1=THIS;param2=Method;';
+            $actual = Node::variableParamsStaticMethod('test','THIS','Method');
+            $this->assertEquals($expected, $actual);
+
+            // integers
+            $expected = 'param0=128;param1=256;param2=384;param3=512;param4=1000;';
+            $actual = Node::variableParamsStaticMethod(128,256,384,512,1000);
+            $this->assertEquals($expected, $actual);
+
+            // no user-passed params
+            $expected = '';
+            $actual = Node::variableParamsStaticMethod();
+            $this->assertEquals($expected, $actual);
+
+            // mixed params invoked on NodeExtended class
+            $expected = 'param0=10;param1=wolves;';
+            $actual = NodeExtended::variableParamsStaticMethod(10,'wolves');
+            $this->assertEquals($expected, $actual);        
     }
 
     /**
      * @covers Node::registerMethod
-     * @todo Implement testRegisterMethod().
      * 
-     * @expectedException InvalidArgumentException
+     * We don't expect any exceptions here
      */
     public function testRegisterMethod() {
         
         $this->assertTrue(method_exists('Node', 'registerMethod'));
-        
-        //--------
-        // non-existing method registration attempt should raise InvalidArgumentException and return FALSE
-        $result = Node::registerMethod('someMethod', 'nonExistingMethod');
-        $this->assertFalse($result);
         
         //--------
         // register dynamic method for valid (existing) function
@@ -445,11 +555,46 @@ class NodeTest extends PHPUnit_Framework_TestCase {
         // register static method for valid (existing) function
         $result = Node::registerMethod('someStatMethod', 'simpleStaticDynTest', true);
         $this->assertTrue($result);        
-        
-        //--------
-        // register 'someStatMethod' ONCE AGAIN should raise InvalidArgumentException and return FALSE
-        $result = Node::registerMethod('someStatMethod', 'simpleStaticDynTest', true);
-        $this->assertFalse($result);
+    }
+    
+    /**
+     * Non-existing callback test
+     * We expect InvalidArgumentException to be raised
+     * 
+     * @covers Node::registerMethod
+     * 
+     * @expectedException InvalidArgumentException
+     */
+    public function testRegisterMethod_NonExistingCallback() {
+        Node::registerMethod('someExcMethod', 'nonExistingCallback');
+    }
+    
+    /**
+     * Duplicate name Exception test (NON-STATIC)
+     * We expect InvalidArgumentException to be raised
+     * 
+     * @covers Node::registerMethod
+     * 
+     * @expectedException InvalidArgumentException
+     */
+    public function testRegisterMethod_DuplicateName() {
+        $registered = Node::registerMethod('uniqueMethod', 'simpleStaticDynTest');
+        $this->assertTrue($registered);
+        Node::registerMethod('uniqueMethod', 'simpleStaticDynTest'); // throw!!!
+    }
+    
+    /**
+     * Duplicate name Exception test (STATIC)
+     * We expect InvalidArgumentException to be raised
+     * 
+     * @covers Node::registerMethod
+     * 
+     * @expectedException InvalidArgumentException
+     */
+    public function testRegisterMethod_DuplicateNameStatic() {
+        $registered = Node::registerMethod('uniqueStaticMethod', 'simpleStaticDynTest', true);
+        $this->assertTrue($registered);
+        Node::registerMethod('uniqueStaticMethod', 'simpleStaticDynTest', true); // throw!!!
     }
 
     /**

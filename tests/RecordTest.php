@@ -779,8 +779,8 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         // Test with one record
         $obj = new Object();
         $obj->name = 'Object # 1';
-        $obj->save();
-
+        $this->assertTrue($obj->save());
+        
         $expected = new Object();
         $expected->id = 1;
         $expected->name = 'Object # 1';
@@ -790,12 +790,13 @@ class RecordTest extends PHPUnit_Framework_TestCase {
         // Test with two records
         $obj = new Object();
         $obj->name = 'Object # 2';
-        $obj->save();
+        $this->assertTrue($obj->save());
 
         $expected = new Object();
         $expected->id = 2;
         $expected->name = 'Object # 2';
         $actual = Record::findByIdFrom('Object', 2);
+        var_dump($actual);
         $this->assertEquals($expected, $actual);
 
     }

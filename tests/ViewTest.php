@@ -29,6 +29,31 @@ class ViewTest extends PHPUnit_Framework_TestCase {
         
     }
 
+    function testFilterKses() {
+
+        use_helper('Kses');
+        $string = "<img src='/image' alt='not allowed attr'> <b>!</b><a href=''>not allowed tag</a>";
+        $allowed = array(
+            'img' => array(
+                'src' => array()
+            ),
+            'b' => array(),
+            'br' => array(),
+        );
+
+        $expect_string = '<img src=\'/image\'> <b>!</b>not allowed tag';
+
+        $this->assertEquals( $expect_string, kses($string, $allowed));
+    }
+
+    function testDecodeEntitiesKses() {
+
+        use_helper('Kses');
+        $string = "&#77;f";
+        $expect_string = 'Mf';
+        $this->assertEquals( $expect_string, kses_decode_entities($string));
+    }
+
 
     /**
      * @todo Implement testAssign().

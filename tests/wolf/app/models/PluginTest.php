@@ -176,12 +176,15 @@ class PluginTest extends PHPUnit_Framework_TestCase
      * @todo Implement testIsEnabled().
      */
     public function testIsEnabled() {
+/*
+TODO fix mock
         $stub = $this->getMock('Plugin');
         $stub->expects($this->any())
              ->method('isEnabled')
              ->will($this->returnValue('foo'));
 
         $test = $stub->isEnabled('test');
+*/
 
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(

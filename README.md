@@ -1,4 +1,6 @@
-# PHPUnit tests for Wolf CMS
+# STATUS - ARCHIVED
+
+## PHPUnit tests for Wolf CMS
 
 These are the PHPUnit tests for Wolf CMS. Current status of the tests is very
 dirty, simplistic and basic.
